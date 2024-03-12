@@ -144,6 +144,8 @@ class Program
 
         var maxPrice1923 = prices1923.Max(p => p.Price);
         Console.WriteLine($"Max price for 2019-2023 using method syntax: {maxPrice1923}");
+        var roi = (maxPrice1923 - minPrice1923) / minPrice1923;
+        Console.WriteLine($"ROI: {roi}");
 
         Console.WriteLine("Using query syntax");
         var minPrice1923Query = (from price in prices1923
@@ -153,8 +155,10 @@ class Program
         var maxPrice1923Query = (from price in prices1923
                                 select price.Price).Max();
         Console.WriteLine($"Max price for 2019-2023 using query syntax: {maxPrice1923Query}");
+        var roiQuery = (maxPrice1923Query - minPrice1923Query) / minPrice1923Query;
+        Console.WriteLine($"ROI: {roiQuery}");
 
-        savetoXML(prices1923);
+        savetoXML(prices1923.Take(10).ToList());
         var pricesFromXML = readFromXML();
         Console.WriteLine("Prices from XML");
         foreach (var price in pricesFromXML)
