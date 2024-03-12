@@ -2,6 +2,40 @@
 using GoldSavings.App.Client;
 namespace GoldSavings.App;
 
+public class RandomizedList<T>
+{
+    private List<T> list = new List<T>();
+    private Random random = new Random();
+
+    public void Add(T element)
+    {
+        if (random.Next(2) == 0) 
+        {
+            list.Insert(0, element); 
+        }
+        else
+        {
+            list.Add(element); 
+        }
+    }
+
+    public T Get(int index)
+    {
+        if (index >= list.Count)
+        {
+            throw new ArgumentOutOfRangeException(nameof(index), "Index is out of range.");
+        }
+
+        int randomIndex = random.Next(index + 1);
+        return list[randomIndex];
+    }
+
+    public bool IsEmpty()
+    {
+        return list.Count == 0;
+    }
+}
+
 class Program
 {
     static void Main(string[] args)
@@ -165,6 +199,20 @@ class Program
         {
             Console.WriteLine($"Date: {price.Date.ToShortDateString()}, Price: {price.Price}");
         }
+
+        part2task1();
+
+        RandomizedList<int> list = new RandomizedList<int>();
+        list.Add(1);
+        list.Add(2);
+        list.Add(3);
+
+        Console.WriteLine(list.Get(0));
+        Console.WriteLine(list.Get(1));
+        Console.WriteLine(list.Get(2));
+
+        Console.WriteLine(list.IsEmpty());
+
     }
 
     static List<GoldPrice> fetchPrices(DateTime startDate, DateTime endDate, GoldClient goldClient)
@@ -208,5 +256,17 @@ class Program
         {
             return (List<GoldPrice>)xml.Deserialize(stream);
         }
+    }
+
+    static void part2task1(){
+        Func<int, bool> isLeapYear = year => year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
+
+        int year = 2020;
+        bool result = isLeapYear(year);
+        Console.WriteLine($"{year} is a leap year: {result}");
+
+        year = 2019;
+        result = isLeapYear(year);
+        Console.WriteLine($"{year} is a leap year: {result}");
     }
 }
