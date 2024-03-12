@@ -155,6 +155,12 @@ class Program
         Console.WriteLine($"Max price for 2019-2023 using query syntax: {maxPrice1923Query}");
 
         savetoXML(prices1923);
+        var pricesFromXML = readFromXML();
+        Console.WriteLine("Prices from XML");
+        foreach (var price in pricesFromXML)
+        {
+            Console.WriteLine($"Date: {price.Date.ToShortDateString()}, Price: {price.Price}");
+        }
     }
 
     static List<GoldPrice> fetchPrices(DateTime startDate, DateTime endDate, GoldClient goldClient)
@@ -191,16 +197,12 @@ class Program
         }
     }
 
-    static void readFromXML()
+    static List<GoldPrice> readFromXML()
     {
         var xml = new System.Xml.Serialization.XmlSerializer(typeof(List<GoldPrice>));
         using (var stream = new System.IO.FileStream("prices.xml", System.IO.FileMode.Open))
         {
-            var prices = (List<GoldPrice>)xml.Deserialize(stream);
-            foreach (var price in prices)
-            {
-                Console.WriteLine($"Date: {price.Date.ToShortDateString()}, Price: {price.Price}");
-            }
+            return (List<GoldPrice>)xml.Deserialize(stream);
         }
     }
 }
